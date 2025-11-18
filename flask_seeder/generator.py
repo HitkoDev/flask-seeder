@@ -1,11 +1,16 @@
 """ Generators module """
 
-import uuid
 import random
+import sys
+import uuid
 from ipaddress import IPv4Address, IPv6Address
-import pkg_resources
 
 from flask_seeder.parser import SGParser, Tokenizer
+
+if sys.version_info >= (3, 9):
+    import importlib.resources as importlib_resources
+else:
+    import importlib_resources
 
 def resource_path(path):
     """ Get the resource path
@@ -17,7 +22,7 @@ def resource_path(path):
         Returns the full filesystem path to the resource.
         Note that no validation is made to ensure the resource actually exist.
     """
-    return pkg_resources.resource_filename("flask_seeder", "data/" + path)
+    return importlib_resources.files("flask_seeder") / ("data/" + path)
 
 def read_resource(path):
     """ Read resource text file
@@ -31,8 +36,9 @@ def read_resource(path):
         A list with the file contents.
     """
     lines = []
-    with open(resource_path(path)) as source:
-        lines = source.read().splitlines()
+    with importlib_resources.as_file(resource_path(path)) as ref:
+        with open(ref) as source:
+            lines = source.read().splitlines()
 
     return lines
 

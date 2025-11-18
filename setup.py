@@ -17,6 +17,7 @@ setuptools.setup(
     license="MIT",
     install_requires=[
         "Flask>=1.0.2",
+        "importlib_resources ; python_version<'3.9'"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
